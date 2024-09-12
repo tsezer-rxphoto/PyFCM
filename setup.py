@@ -17,7 +17,7 @@ def read(fname):
 
 install_requires = [
     "requests",
-    "urllib3>=1.26.0",
+    "urllib3>=1.25.11",
     "google-auth>=2.22.0",
     "aiohttp>=3.8.6",
 ]
