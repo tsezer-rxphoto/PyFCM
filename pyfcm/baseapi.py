@@ -28,9 +28,9 @@ class BaseAPI(object):
 
     def __init__(
         self,
+        project_id: str,
         service_account_file: str=None,
         service_account_info: str=None,
-        project_id: str,
         credentials=None,
         proxy_dict=None,
         env=None,
