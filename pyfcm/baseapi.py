@@ -29,6 +29,7 @@ class BaseAPI(object):
     def __init__(
         self,
         service_account_file: str,
+        service_account_info: str,
         project_id: str,
         credentials=None,
         proxy_dict=None,
@@ -40,6 +41,7 @@ class BaseAPI(object):
         Override existing init function to give ability to use v1 endpoints of Firebase Cloud Messaging API
         Attributes:
             service_account_file (str): path to service account JSON file
+            service_account_info (dict): service account JSON
             project_id (str): project ID of Google account
             credentials (Credentials): Google oauth2 credentials instance, such as ADC
             proxy_dict (dict): proxy settings dictionary, use proxy (keys: `http`, `https`)
@@ -48,6 +50,7 @@ class BaseAPI(object):
             adapter (BaseAdapter): adapter instance
         """
         self.service_account_file = service_account_file
+        self.service_account_info = service_account_info
         self.project_id = project_id
         self.FCM_END_POINT = self.FCM_END_POINT + f"/{self.project_id}/messages:send"
         self.FCM_REQ_PROXIES = None
@@ -55,7 +58,7 @@ class BaseAPI(object):
         self.thread_local = threading.local()
         self.credentials = credentials
 
-        if not service_account_file and not credentials:
+        if not service_account_file and not credentials and not service_account_info:
             raise AuthenticationError(
                 "Please provide a service account file path or credentials in the constructor"
             )
@@ -140,6 +143,11 @@ class BaseAPI(object):
             if self.service_account_file:
                 credentials = service_account.Credentials.from_service_account_file(
                     self.service_account_file,
+                    scopes=["https://www.googleapis.com/auth/firebase.messaging"],
+                )
+            elif self.service_account_info:
+                credentials = service_account.Credentials.from_service_account_info(
+                    self.service_account_info,
                     scopes=["https://www.googleapis.com/auth/firebase.messaging"],
                 )
             else:
