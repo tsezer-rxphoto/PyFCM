@@ -87,7 +87,7 @@ class BaseAPI(object):
             retries = Retry(
                 backoff_factor=1,
                 status_forcelist=[502, 503],
-                allowed_methods=(Retry.DEFAULT_ALLOWED_METHODS | frozenset(["POST"])),
+                allowed_methods=(Retry.DEFAULT_METHOD_WHITELIST | frozenset(["POST"])),
             )
             adapter = self.custom_adapter or HTTPAdapter(max_retries=retries)
             self.thread_local.requests_session = requests.Session()
